@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    student:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"student_datas"
+    },
     name: {
       type: String,
       required: true,
@@ -23,6 +27,10 @@ const userSchema = new mongoose.Schema(
     address: {
       type: String,
       required: true,
+    },
+    answer :{
+      type: String,
+      required:true
     },
     role: {
       type: Number,

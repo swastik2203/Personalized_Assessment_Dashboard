@@ -1,8 +1,25 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
+import { useAuth } from '../../context/auth'
+import { toast } from "react-hot-toast";
+
 
 const Header = () => {
+
+  const [auth,setAuth] = useAuth();
+
+  const handleLogout = () => {
+    setAuth({
+      ...auth,
+      user:null,
+      token:""
+    })
+    localStorage.removeItem('auth')
+    toast.success("Logout Successfully")
+  }
+
+
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -28,21 +45,42 @@ const Header = () => {
                   Home
                 </NavLink>
               </li>
-              <li className="nav-item">
-                <NavLink to="/category" className="nav-link ">
-                  Category
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/register" className="nav-link">
-                  Register
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/login" className="nav-link">
-                  Login
-                </NavLink>
-              </li>
+              
+              {
+                !auth.user ? (<>
+                  <li className="nav-item">
+                  <NavLink to="/register" className="nav-link">
+                    Register
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink to="/login" className="nav-link">
+                    Login
+                  </NavLink>
+                </li>
+                </>) : (<>
+                  <li className="nav-item dropdown">
+                    <NavLink className="nav-link dropdown-toggle mx-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      {auth?.user?.name}
+                    </NavLink>
+                    <ul className="dropdown-menu">
+                      {/* {console.log(auth.user)} */}
+                      <li><NavLink to={`/dashboard/${auth?.user?.role===1 ? 'teacher':'student'}`} className="dropdown-item">Dashboard</NavLink></li>
+                      <li>
+                      <NavLink
+                      onClick={handleLogout}
+                      to="/login"
+                      className="dropdown-item"
+                      >
+                      Logout
+                      </NavLink>
+                      </li>
+                    </ul>
+                  </li>
+
+                </>)
+              }
+
             </ul>
           </div>
         </div>
